@@ -1,12 +1,6 @@
 <?php
 
-$strings = [
-  'ugknbfddgicrmopn',
-  'aaa',
-  'jchzalrnumimnmhp',
-  'haegwjzuvuyypxyu',
-  'dvszwmarrgswjxmb'
-];
+$strings = file('input/day05.txt');
 
 $naughty = 0;
 $nice = 0;
