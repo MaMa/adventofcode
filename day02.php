@@ -1,5 +1,5 @@
 <?php
-$input = file_get_contents('day02-input.txt');
+$input = file_get_contents('input/day02.txt');
 
 $rows = explode("\n", $input);
 $paper = 0;
