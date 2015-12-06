@@ -1,26 +1,30 @@
 <?php
 $moves = str_split(file_get_contents('input/day03.txt'));
 $world = [0=>[0=>1]];
-$x = 0;
-$y = 0;
+$index = 0;
+$santa = [
+  0 => ['x' => 0, 'y' => 0]
+];
+$count = count($santa);
 
 //move santa
 foreach ($moves as $move) {
+  $s = &$santa[$index++ % $count];
+  $world[$s['x']][$s['y']]++;
   switch ($move) {
     case '>':
-      $x++;
+      $s['x']++;
       break;
     case '<':
-      $x--;
+      $s['x']--;
       break;
     case '^':
-      $y++;
+      $s['y']++;
       break;
     case 'v':
-      $y--;
+      $s['y']--;
       break;
   }
-  $world[$x][$y]++;
 }
 
 //count houses
