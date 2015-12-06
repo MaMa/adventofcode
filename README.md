@@ -1,6 +1,8 @@
 # adventofcode
 tasks for http://adventofcode.com/
 
-Joulukalenteria koodaten
+Coding for christmas using quick and dirty PHP
 
 If you copy these answers you are NAUGHTY!
+
+Merry christmas
