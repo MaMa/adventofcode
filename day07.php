@@ -12,6 +12,20 @@ $input = [
 ];
 
 $circuit = [];
+
+function num_or_val($in) {
+  global $circuit;
+  if (is_numeric($in)) {
+    return $in & 0xFFFF;
+  } else {
+    if (empty($circuit[$in])) {
+      var_dump($circuit[$match[1]]);
+      die('Not Set: '. $in);
+    }
+    return $circuit[$in];
+  }
+}
+
 foreach($input as $in) {
   if (!preg_match('/([\w ]+) -> (\w+)/', $in, $match)) continue;
   $code = $match[1];
@@ -21,21 +35,28 @@ foreach($input as $in) {
     $circuit[$to] = intval($code) & 0xFFFF;
   }
   elseif (preg_match('/NOT (\w+)/', $code, $match)) {
-    if (is_numeric($match[1])) {
-      $val = $match[1];
-    } else {
-      if (empty($circuit[$match[1]])) {
-        var_dump($circuit[$match[1]]);
-        die('Not Set: '. $in);
-      }
-      $val = $circuit[$match[1]];
-    }
+    $val = num_or_val($match[1]);
     $circuit[$to] = ~intval($val) & 0xFFFF;
   } elseif(preg_match('/(\w+) (AND|OR|LSHIFT|RSHIFT) (\w+)/', $code, $match)) {
-    //todo
+    $from = num_or_val($match[1]);
+    switch ($match[2]) {
+      case 'AND':
+        $circuit[$to] = $from & num_or_val($match[3]);
+        break;
+      case 'OR':
+        $circuit[$to] = $from | num_or_val($match[3]);
+        break;
+      case 'LSHIFT':
+        $circuit[$to] = $from << num_or_val($match[3]);
+        break;
+      case 'RSHIFT':
+        $circuit[$to] = $from >> num_or_val($match[3]);
+        break;
+    }
   } else {
     die ('Invalid code '. $code);
   }
 }
+
 ksort($circuit);
 var_dump($circuit);
