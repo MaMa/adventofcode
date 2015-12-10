@@ -1,11 +1,10 @@
 <?php
-ini_set('memory_limit','1G');
+ini_set('memory_limit','256M');
+
+$input = file('input/day09.txt');
+//$input = ['London to Dublin = 464', 'London to Belfast = 518', 'Dublin to Belfast = 141'];
 
 $dists = [];
-
-//$input = file('input/day09.txt');
-$input = ['London to Dublin = 464','London to Belfast = 518','Dublin to Belfast = 141'];
-
 foreach ($input as $row) {
   if (!preg_match('/^(\w+) to (\w+) = (\d+)$/', $row, $match)) continue;
   $dists[$match[1]][$match[2]] = (int) $match[3];
@@ -17,31 +16,42 @@ function remove_key($arr, $key) {
   return $arr;
 }
 
+function get_path_distance($path) {
+  global $dists;
+  $distance = 0;
+  $from = array_shift($path);
+  foreach($path as $dest) {
+    //var_dump($from, $dest, $dists);
+    $distance += $dists[$from][$dest];
+    $from = $dest;
+  }
+  return $distance;
+}
+
 $g_paths = [];
-function recurse($dests, $result) {
+function recurse($path, $dests) {
+
   if (empty($dests)) {
     global $g_paths;
-    $path = implode(' > ', $result['path']);
-    $g_paths[$path] = $result['dist'];
+    $key = implode(' > ', $path);
+    $g_paths[$key] = get_path_distance($path);
     return;
   }
-  foreach($dests as $to => $dist) {
-    $path = $result['path'];
-    $path[] = $to;
-    $new_dist = $result['dist'] + $dist;
-    $new_result = ['path' => $path, 'dist' => $new_dist];
-    recurse(remove_key($dests, $to), $new_result);
-  }
 
+  foreach($dests as $to => $distance) {
+    $new_path = $path;
+    array_push($new_path, $to);
+    recurse($new_path, remove_key($dests, $to));
+  }
 }
 
 foreach ($dists as $start => $others) {
   foreach($others as $dest => $dist) {
-    $res = ['path' => [$start, $dest], 'dist' => $dist];
-    recurse(remove_key($others, $dest), $res);
+    recurse([$start, $dest], remove_key(remove_key($others, $dest), $start));
   }
 }
 
-var_dump($g_paths);
 $min = min($g_paths);
-print('Shortest path: '. $min ."\n");
+$min_path = array_search($min, $g_paths);
+print('Path: '. $min_path ."\n");
+print('Length: '. $min ."\n");
