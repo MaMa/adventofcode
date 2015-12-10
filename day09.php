@@ -53,5 +53,10 @@ foreach ($dists as $start => $others) {
 
 $min = min($g_paths);
 $min_path = array_search($min, $g_paths);
-print('Path: '. $min_path ."\n");
-print('Length: '. $min ."\n");
+print('Min Path: '. $min_path ."\n");
+print('Min Length: '. $min ."\n");
+
+$max = max($g_paths);
+$max_path = array_search($min, $g_paths);
+print('Max Path: '. $max_path ."\n");
+print('Max Length: '. $max ."\n");
