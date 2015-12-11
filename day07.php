@@ -22,7 +22,11 @@ while($in = array_shift($input)) {
   $to = $match[2];
   try {
     if (preg_match('/^(\w+)$/', $code, $match)) {
-      $circuit[$to] = num_or_val($match[1]);
+      if ($to == 'b') {
+        $circuit[$to] = num_or_val('3176');
+      } else {
+        $circuit[$to] = num_or_val($match[1]);
+      }
     }
     elseif (preg_match('/NOT (\w+)/', $code, $match)) {
       $circuit[$to] = ~num_or_val($match[1]);
@@ -46,7 +50,7 @@ while($in = array_shift($input)) {
       die ('Invalid input: '. $in);
     }
   } catch (Exception $e) {
-    $input[] = $in; //loop to end of input
+    if (empty($circuit['a'])) $input[] = $in; //loop to end of input
   }
 }
 
