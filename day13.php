@@ -1,5 +1,5 @@
 <?php
-ini_set('memory_limit','256M');
+ini_set('memory_limit','512M');
 
 $in = file('input/day13.txt');
 $regex = '/(\w+) would (gain|lose) (\d+) happiness units by sitting next to (\w+)./';
@@ -30,7 +30,10 @@ function permute($arr) {
   $rec([], $arr);
   return $result;
 }
-$permutations = permute(array_keys($sit));
+
+$people = array_keys($sit);
+$people[] = 'Self';
+$permutations = permute($people);
 
 function calcScore($seats) {
   global $sit;
@@ -40,8 +43,8 @@ function calcScore($seats) {
     $self = $seats[$i];
     $left = $seats[($i-1+$len)%$len];
     $right = $seats[($i+1+$len)%$len];
-    $score += $sit[$self][$left];
-    $score += $sit[$self][$right];
+    if ($left !== 'Self') $score += $sit[$self][$left];
+    if ($right !== 'Self') $score += $sit[$self][$right];
   }
   return $score;
 }
