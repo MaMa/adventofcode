@@ -26,10 +26,17 @@ Given the descriptions of each reindeer (in your puzzle input), after exactly
 2503 seconds, what distance has the winning reindeer traveled?
 */
 
-$input = [
-  'Comet can fly 14 km/s for 10 seconds, but then must rest for 127 seconds.',
-  'Dancer can fly 16 km/s for 11 seconds, but then must rest for 162 seconds.'
-];
+$test = false;
+if ($test) {
+  $seconds = 1000;
+  $input = [
+    'Comet can fly 14 km/s for 10 seconds, but then must rest for 127 seconds.',
+    'Dancer can fly 16 km/s for 11 seconds, but then must rest for 162 seconds.'
+  ];
+} else {
+  $seconds = 2503;
+  $input = file('input/day14.txt');
+}
 
 const MODE_START = 1;
 const MODE_RUN   = 2;
@@ -43,35 +50,29 @@ foreach($input as $row) {
     'speed' => intval($match[2]),
     'time' => intval($match[3]),
     'rest' => intval($match[4]),
-    'state' => MODE_START,
-    'count' => null,
+    'state' => MODE_RUN,
+    'count' => intval($match[3]),
     'distance' => 0,
     'ticks' => 0
   ];
 }
 
 function tick(&$r) {
-  switch ($r['state']) {
-    case MODE_START:
-      $r['state'] = MODE_RUN;
-      $r['distance'] += $r['speed'];
-      $r['count'] = $r['time']-1;
-      break;
+  $r['ticks']++;
+  $r['count']--;
+  if ($r['state'] == MODE_RUN) {
+    $r['distance'] += $r['speed'];
+  }
+  if ($r['count'] <= 0) switch ($r['state']) {
     case MODE_RUN:
-      if ($r['count'] <= 0) {
-        $r['state'] = MODE_REST;
-        $r['count'] = $r['rest']-1;
-      }
-      $r['distance'] += $r['speed'];
+      $r['state'] = MODE_REST;
+      $r['count'] = $r['rest'];
       break;
     case MODE_REST:
-      if ($r['count'] <= 0) {
-        $r['state'] = MODE_RUN;
-        $r['count'] = $r['time'];
-      }
+      $r['state'] = MODE_RUN;
+      $r['count'] = $r['time'];
+      break;
   }
-  $r['count']--;
-  $r['ticks']++;
 }
 
 function increment(&$reindeers) {
@@ -89,7 +90,8 @@ function printResult($reindeers) {
   print("\nMax: ${max}\n");
 }
 
-for ($i=0;$i<1000;$i++) {
-    increment($reindeers);
+for ($i=0;$i<$seconds;$i++) {
+  increment($reindeers);
 }
+
 printResult($reindeers);
