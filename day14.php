@@ -53,6 +53,7 @@ foreach($input as $row) {
     'state' => MODE_RUN,
     'count' => intval($match[3]),
     'distance' => 0,
+    'points' => 0,
     'ticks' => 0
   ];
 }
@@ -79,15 +80,36 @@ function increment(&$reindeers) {
   foreach ($reindeers as &$r) {
     tick($r);
   }
+  $leads = getLeads($reindeers);
+  foreach($leads as $name) {
+    $reindeers[$name]['points']++;
+  }
+}
+
+function getLeads($reindeers) {
+  $max = 0;
+  $leads = [];
+  foreach ($reindeers as $name => $r) {
+    if ($r['distance'] > $max) {
+      $max = $r['distance'];
+      $leads = [$name];
+    } elseif ($r['distance'] == $max) {
+      $leads[] = $name;
+    }
+  }
+  return $leads;
 }
 
 function printResult($reindeers) {
-  $max = 0;
+  $maxDist = 0;
+  $maxPoints = 0;
   foreach ($reindeers as $name => $r) {
-    printf("%s\t-> %d\n", $name, $r['distance']);
-    $max = ($r['distance'] > $max) ? $r['distance'] : $max;
+    printf("%s\t%d m\t%d points\n", $name, $r['distance'], $r['points']);
+    $maxDist = ($r['distance'] > $maxDist) ? $r['distance'] : $maxDist;
+    $maxPoints = ($r['points'] > $maxPoints) ? $r['points'] : $maxPoints;
   }
-  print("\nMax: ${max}\n");
+  print("Max distance:\t${maxDist}\n");
+  print("Max points:\t${maxPoints}\n");
 }
 
 for ($i=0;$i<$seconds;$i++) {
