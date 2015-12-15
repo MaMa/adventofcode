@@ -29,6 +29,7 @@ Given the ingredients in your kitchen and their properties, what is the total sc
 */
 
 const TEST = false;
+const PART_B = true;
 
 if (TEST) {
   $in = [
@@ -59,11 +60,14 @@ function valueOf(array $portions) {
 
   $take = ['capacity', 'durability', 'flavor', 'texture'];
   $values = [];
+  $calories = 0;
   foreach($portions as $id => $portion) {
     foreach ($take as $ing) {
       $values[$ing] += $ingredients[$id][$ing] * $portion;
     }
+    $calories += $ingredients[$id]['calories'] * $portion;
   }
+  if (PART_B && $calories !== 500) return 0;
   //if any is negative the product is 0;
   foreach ($values as $val) {
     if ($val < 0) return 0;
