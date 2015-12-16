@@ -1,5 +1,6 @@
 <?php
 
+const PART_2 = true;
 $in = file('input/day16.txt');
 $regex = '/Sue (\d+): (\w+): (\d+), (\w+): (\d+), (\w+): (\d+)/';
 $sues = [];
@@ -25,11 +26,26 @@ $target = [
 
 foreach ($sues as $id => $sue) {
   foreach ($sue as $info => $num) {
-    if ($target[$info] !== $num) {
+    if (PART_2 && ($info == 'cats' || $info == 'trees')) {
+      if ($target[$info] >= $num) {
+        unset($sues[$id]);
+        continue(2);
+      }
+    } elseif (PART_2 && ($info == 'pomeranians' || $info == 'goldfish')) {
+      if ($target[$info] <= $num) {
+        unset($sues[$id]);
+        continue(2);
+      }
+    } elseif ($target[$info] !== $num) {
       unset($sues[$id]);
       continue(2);
     }
   }
 }
 
-var_dump($sues);
+if (count($sues) > 1) {
+  print("There can only be one!\n");
+} else {
+  $id = array_pop(array_keys($sues));
+  print("It's sue ${id}\n");
+}
