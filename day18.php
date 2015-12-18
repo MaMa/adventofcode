@@ -1,9 +1,10 @@
 <?php
 
 const TEST = false;
+const PART_2 = true;
 if (TEST) {
   $in = ['.#.#.#','...##.','#....#','..#...','#.#..#','####..'];
-  $steps = 4;
+  $steps = PART_2 ? 5 : 4;
 } else {
   $in = file('input/day18.txt');
   $steps = 100;
@@ -17,6 +18,10 @@ foreach($in as $y => $row) {
   }
 }
 
+if (PART_2) {
+  $grid = stuckLights($grid);
+}
+
 function printGrid($grid) {
   foreach($grid as $y => $row) {
     foreach($row as $x => $on) {
@@ -24,6 +29,16 @@ function printGrid($grid) {
     }
     print "\n";
   }
+}
+
+function stuckLights($grid) {
+  $ymax = count($grid)-1;
+  $xmax = count($grid[0])-1;
+  $grid[0][0] = true;
+  $grid[$ymax][0] = true;
+  $grid[0][$xmax] = true;
+  $grid[$ymax][$xmax] = true;
+  return $grid;
 }
 
 function iterate($grid) {
@@ -53,6 +68,11 @@ function iterate($grid) {
       }
     }
   }
+
+  if (PART_2) {
+    return stuckLights($newGrid);
+  }
+
   return $newGrid;
 }
 
@@ -68,5 +88,7 @@ foreach($grid as $y => $row) {
     if ($on) $count ++;
   }
 }
+
+printGrid($grid);
 
 print("Lights lit: ${count}\n");
