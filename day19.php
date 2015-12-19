@@ -1,6 +1,6 @@
 <?php
 
-const TEST = true;
+const TEST = false;
 if (TEST) {
   $trans = [
     'H' => ['HO', 'OH'],
@@ -8,7 +8,16 @@ if (TEST) {
   ];
   $string = 'HOHOHO';
 } else {
-  
+  $trans = [];
+  $string = null;
+  foreach(file('input/day19.txt') as $row) {
+    $row = trim($row);
+    if (preg_match('/(\w+) => (\w+)/', $row, $match)) {
+      $trans[$match[1]][] = $match[2];
+    } elseif(!empty($row)) {
+      $string = $row;
+    }
+  }
 }
 
 $results = [];
