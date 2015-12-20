@@ -51,20 +51,21 @@ foreach($trans as $from => $values) {
   }
 }
 
-$strings = [$string];
-$found = false;
-$count = 0;
-do {
-  $new = [];
-  foreach($strings as $string) {
-    $new = array_unique(array_merge($new, transform($reverse, $string)));
+$min = 2147483647;
+function reverse_recurse($string, $step=0) {
+  global $reverse, $min;
+  if ($string == 'e') {
+    if ($step < $min) {
+      $min = $step;
+      print ("min: $min\n");
+    }
+  } else {
+    foreach (transform($reverse, $string) as $reversed) {
+      reverse_recurse($reversed, $step+1);
+    }
   }
-  $strings = $new;
-  $count++;
-  printf("%d\t%d\n", $count, count($strings));
-  foreach($strings as $str) {
-    if ($str === 'e') $found = true;
-  }
-} while (!$found && $count < 10000);
+}
 
-print ("Count ${count}\n");
+reverse_recurse($string);
+
+print ("Min ${min}\n");
