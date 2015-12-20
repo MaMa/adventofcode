@@ -6,12 +6,13 @@ function houseScore($num) {
   $score = $num;
   $start = floor($num/2);
   for ($i=$start;$i>0;$i--) {
+    if ($i*50 < $num) break;
     if ($num%$i == 0) $score += $i;
   }
-  return $score * 10;
+  return $score * 11;
 }
 
-$house = 500000;
+$house = 800000;
 $score = 0;
 do {
   $score = houseScore(++$house);
