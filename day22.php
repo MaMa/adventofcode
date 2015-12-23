@@ -1,5 +1,5 @@
 <?php
-/*
+//*
 $player = ['health' => 50, 'mana' => 500, 'armor' => 0];
 $enemy  = ['health' => 71, 'damage' => 10, 'armor' => 0];
 /*/
@@ -87,7 +87,12 @@ function applyEffects($state) {
   }
   //Clear expired effects
   foreach ($effects as $effect => $count) {
-    if ($count <= 0) unset($effects[$effect]);
+    if ($count <= 0) {
+      if ($effect == 'shield') {
+        $state['player']['armor'] = 0;
+      }
+      unset($effects[$effect]);
+    }
   }
   $state['effects'] = $effects;
   return $state;
@@ -107,7 +112,7 @@ function castSpell($spell, $state) {
 
 function checkFinished($state) {
   global $minState;
-  if ($state['used'] > $minState['used']) {
+  if ($state['used'] >= $minState['used']) {
     //too expensive
     return true;
   }
