@@ -1,5 +1,6 @@
 <?php
 //*
+$hard = true;
 $player = ['health' => 50, 'mana' => 500, 'armor' => 0];
 $enemy  = ['health' => 71, 'damage' => 10, 'armor' => 0];
 /*/
@@ -29,7 +30,9 @@ print ('MinMana '. $minState['used'] ."\n");
 
 $iters = 0;
 function playerRound($state) {
-  global $iters, $minMana;
+  global $iters, $minMana, $hard;
+  if ($hard) $state['player']['health']--;
+  if (checkFinished($state)) return;
   $state['history'][$state['rounds']++] = getHistory($state);
   $state = applyEffects($state);
   if (checkFinished($state)) return;
