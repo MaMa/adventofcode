@@ -11,8 +11,8 @@ $in = [];
 foreach ($input as $id => $row) {
   $in[$id] = explode(' ',trim($row));
 }
-
-$a = 0;
+const PART_2 = true;
+$a = PART_2 ? 1 : 0;
 $b = 0;
 $idx = 0;
 
