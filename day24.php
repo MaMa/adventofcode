@@ -6,12 +6,12 @@ $in = [1,2,3,4,5,7,8,9,10,11];
 $in = array_map('intval', file('input/day24.txt'));
 //*/
 
+const PART_2 = true;
+
 $sum = array_sum($in);
-if ($sum % 3) die("Sum $sum is not divisible by 3\n");
-$target = $sum / 3;
+$target = $sum / (PART_2 ? 4 : 3);
 
-
-print ("Third of ${sum} = ${target}\n");
+print ("Target of ${sum} = ${target}\n");
 
 $results = [];
 $minPkgs = 999;
